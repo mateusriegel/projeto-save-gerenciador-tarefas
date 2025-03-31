@@ -5,7 +5,7 @@ import { requireAuth }  from '../middleware/AuthMiddleware.js';
 const router = express.Router();
 
 // Rotas públicas
-router.post('/user', create);
+router.post('/register', create);
 router.post('/login', login);
 
 // Rotas privadas

@@ -1,10 +1,10 @@
 import Task from '../models/Task.js';
 import TaskStatusEnum from '../models/TaskStatusEnum.js';
-import { CreateTaskDTO, UpdateTaskDTO } from '../dtos/TaskDTO.js';
+import { CrudTaskDTO } from '../dtos/TaskDTO.js';
 
 export const findAll = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find({ user: req.user.id });
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar tarefas', error });
@@ -14,7 +14,8 @@ export const findAll = async (req, res) => {
 export const getById = async (req, res) => {
   try {
     const { id } = req.params;
-    const task = await Task.findById(id);
+
+    const task = await Task.findOne({ _id: id, user: req.user.id });
     
     if (!task) {
       return res.status(404).json({ message: 'Tarefa não encontrada' });
@@ -28,8 +29,12 @@ export const getById = async (req, res) => {
 
 export const create = async (req, res) => {
   try {
-    const dto = new CreateTaskDTO(req.body);
-    const task = new Task(dto);
+    const dto = new CrudTaskDTO(req.body);
+
+    const task = new Task({ 
+      ...dto,
+      user: req.user.id  
+    });
     await task.save();
     
     res.status(201).json(task);
@@ -41,12 +46,13 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const { id } = req.params;
-    const dto = new UpdateTaskDTO(req.body);
+    const dto = new CrudTaskDTO(req.body);
 
-    const updatedTask = await Task.findByIdAndUpdate(id, dto, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: id, user: req.user.id },
+      dto,
+      { new: true, runValidators: true }
+    );
 
     if (!updatedTask) {
       return res.status(404).json({ message: 'Tarefa não encontrada' });
@@ -67,10 +73,11 @@ export const updateStatus = async (req, res) => {
       return res.status(400).json({ message: 'Status inválido' });
     }
 
-    const updatedTask = await Task.findByIdAndUpdate(id, { status }, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: id, user: req.user.id },
+      { status },
+      { new: true, runValidators: true }
+    );
 
     if (!updatedTask) {
       return res.status(404).json({ message: 'Tarefa não encontrada' });
@@ -83,18 +90,18 @@ export const updateStatus = async (req, res) => {
 };
 
 export const remove = async (req, res) => {
-    try {
-      const { id } = req.params;
+  try {
+    const { id } = req.params;
   
-      const deletedTask = await Task.findByIdAndDelete(id);
+    const deletedTask = await Task.findOneAndDelete({ _id: id, user: req.user.id });
   
-      if (!deletedTask) {
-        return res.status(404).json({ message: 'Tarefa não encontrada' });
-      }
-  
-      res.status(200).json({ message: 'Tarefa deletada com sucesso' });
-    } catch (error) {
-      res.status(500).json({ message: 'Erro ao deletar tarefa', error });
+    if (!deletedTask) {
+      return res.status(404).json({ message: 'Tarefa não encontrada' });
     }
-  };
   
+    res.status(200).json({ message: 'Tarefa deletada com sucesso' });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao deletar tarefa', error });
+  }
+};
+

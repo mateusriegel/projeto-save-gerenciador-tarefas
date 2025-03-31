@@ -9,12 +9,17 @@ const taskSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    required: [true, 'E-mail é obrigatório']
+    required: [true, 'Data é obrigatória']
   },
   status: {
     type: String,
     enum: Object.values(TaskStatusEnum),
     default: TaskStatusEnum.PENDING
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Tarefa deve estar associada a um usuário']
   }
 }, {
   timestamps: true

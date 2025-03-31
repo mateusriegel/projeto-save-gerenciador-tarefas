@@ -1,15 +1,18 @@
-import express from 'express';
 import dotenv from 'dotenv';
+import express from 'express';
 import connectDB from './src/config/db.js';
-import authRoutes from './src/routes/AuthRoutes.js';
-import taskRoutes from './src/routes/TaskRoutes.js';
+import AuthRoutes from './src/routes/AuthRoutes.js';
+import TaskRoutes from './src/routes/TaskRoutes.js';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use('/api/auth', authRoutes);
-app.use('/api/task', taskRoutes);
+app.use(cors())
+
+app.use('/api/auth', AuthRoutes);
+app.use('/api/task', TaskRoutes);
 
 connectDB();
 
