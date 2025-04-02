@@ -4,7 +4,8 @@ import { CrudTaskDTO } from '../dtos/TaskDTO.js';
 
 export const findAll = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user.id });
+    console.log(req.query.date)
+    const tasks = await Task.find({ user: req.user.id, date: req.query.date });
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar tarefas', error });

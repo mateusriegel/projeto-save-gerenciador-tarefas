@@ -1,25 +1,29 @@
 import { api } from "../api/api";
-import { Task } from "../models/Task";
+import { Task, CrudTask } from "../models/Task";
 
-// Busca tarefas por data
+const taskUrl='/task'
+
 export const getTasksByDate = async (date: string): Promise<Task[]> => {
-  const response = await api.get<Task[]>(`/tasks?date=${date}`);
+  const response = await api.get<Task[]>(`${taskUrl}?date=${date}`);
   return response.data;
 };
 
-// Cria uma nova tarefa
-export const createTask = async (description: string, date: string): Promise<Task> => {
-  const response = await api.post<Task>("/tasks", { description, date });
+export const create = async (resource: CrudTask): Promise<Task> => {
+  const response = await api.post<Task>(`${taskUrl}`, resource);
+
   return response.data;
 };
 
-// Atualiza uma tarefa (opcional - se for implementar edição)
-export const updateTask = async (id: string, description: string): Promise<Task> => {
-  const response = await api.put<Task>(`/tasks/${id}`, { description });
+export const update = async (id: string, resource: CrudTask): Promise<Task> => {
+  const response = await api.put<Task>(`${taskUrl}/${id}`, resource);
   return response.data;
 };
 
-// Exclui uma tarefa
+export const updateStatus = async (id: string, status: string): Promise<Task> => {
+  const response = await api.put<Task>(`${taskUrl}/${id}/status`, { status });
+  return response.data;
+};
+
 export const deleteTask = async (id: string): Promise<void> => {
-  await api.delete(`/tasks/${id}`);
+  await api.delete(`${taskUrl}/${id}`);
 };

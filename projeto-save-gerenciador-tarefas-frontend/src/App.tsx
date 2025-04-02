@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
-import Tasks from "./pages/Tasks"
+import Task from "./pages/Task"
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/task" element={<Task />} />
         <Route path="*" element={<Login />} />
       </Routes>
     </BrowserRouter>

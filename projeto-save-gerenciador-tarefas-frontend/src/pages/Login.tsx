@@ -15,7 +15,7 @@ const Login: React.FC = () => {
 
       localStorage.setItem("token", token);
 
-      navigate("/tasks");
+      navigate("/task");
     } catch {
       setError("Erro ao realizar login");
     }
