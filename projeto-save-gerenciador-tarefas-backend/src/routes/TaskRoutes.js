@@ -5,8 +5,6 @@ import { findAll, getById, create, update, updateStatus, remove } from '../contr
 const router = express.Router();
 
 // Rotas privadas
-router.get('/', requireAuth, findAll);
-router.get('/:id', requireAuth, getById); 
 router.post('/', requireAuth, create);
 router.put('/:id', requireAuth, update);
 router.put('/:id/status', requireAuth, updateStatus);
