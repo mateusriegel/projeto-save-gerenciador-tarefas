@@ -1,31 +1,7 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { CreateUserDTO, UpdateUserDTO } from '../dtos/UserDTO.js';
-
-export const findAll = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar usuários', error });
-  }
-};
-
-export const getById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    
-    if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado' });
-    }
-    
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar usuário', error });
-  }
-};
+import { CreateUserDTO } from '../dtos/UserDTO.js';
 
 export const create = async (req, res) => {
   try {
@@ -46,22 +22,6 @@ export const create = async (req, res) => {
     res.status(201).json({ user });
   } catch (error) {
     res.status(500).json({ message: "Erro no servidor" });
-  }
-};
-
-export const update = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const dto = new UpdateUserDTO(req.body);
-
-    const updatedUser = await User.findByIdAndUpdate(id, { name: dto.name, email: dto.email }, { new: true, runValidators: true });
-    if (!updatedUser) {
-      return res.status(404).json({ message: "Usuário não encontrado" });
-    }
-
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ message: "Erro ao atualizar usuário", error });
   }
 };
 
@@ -89,7 +49,7 @@ export const login = async (req, res) => {
 
 export const updatePassword = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user.id;
     const { oldPassword, newPassword } = req.body;
 
     if (!oldPassword || !newPassword) {
@@ -98,7 +58,7 @@ export const updatePassword = async (req, res) => {
 
     const user = await User.findById(id).select('+password');
     if (!user) {
-      return res.status(404).json({ message: 'Usuário não encontrado' });
+      return res.status(400).json({ message: 'Usuário não encontrado' });
     }
 
     const isMatch = await bcrypt.compare(oldPassword, user.password);

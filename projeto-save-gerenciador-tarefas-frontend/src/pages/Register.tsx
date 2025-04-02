@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register } from "../services/authService";
+import { APIError } from "../api/api";
 
 const Register: React.FC = () => {
-  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -12,13 +12,14 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { token } = await register(name, email, password);
+      const { token } = await register(email, password);
       
       localStorage.setItem("token", token);
 
-      navigate("/tasks");
-    } catch {
-      setError("Erro ao cadastrar usuário");
+      navigate("/task");
+    } catch(error) {
+      const err = error as APIError;
+      setError(err.response?.data?.message || "Erro ao cadastrar usuário");
     }
   };
 
@@ -27,14 +28,6 @@ const Register: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Cadastro</h1>
       {error && <p className="text-red-500 mb-2">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
-          required
-        />
         <input
           type="email"
           placeholder="E-mail"

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
+import { APIError } from "../api/api";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+
+  localStorage.removeItem("token");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,8 +19,9 @@ const Login: React.FC = () => {
       localStorage.setItem("token", token);
 
       navigate("/task");
-    } catch {
-      setError("Erro ao realizar login");
+    } catch(error) {
+      const err = error as APIError;
+      setError(err.response?.data?.message || "Erro ao realizar login");
     }
   };
 

@@ -7,14 +7,23 @@ interface AuthResponse {
 }
 
 export const register = async (
-  name: string,
   email: string,
   password: string
 ): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>("/auth/register", {
-    name,
     email,
     password,
+  });
+  return response.data;
+};
+
+export const updatePassword = async (
+  oldPassword: string,
+  newPassword: string
+): Promise<AuthResponse> => {
+  const response = await api.put<AuthResponse>(`/auth/user/password`, {
+    oldPassword,
+    newPassword,
   });
   return response.data;
 };

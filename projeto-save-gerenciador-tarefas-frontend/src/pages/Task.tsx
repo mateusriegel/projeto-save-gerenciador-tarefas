@@ -50,7 +50,12 @@ export default function TaskPage() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     navigate("/login");
+  };
+
+  const handleUpdatePassword = () => {
+    navigate("/password");
   };
 
   const getStatusColor = (status: string) => {
@@ -66,7 +71,8 @@ export default function TaskPage() {
     <div className="container mx-auto p-4 max-w-lg">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gerenciador de Tarefas</h1>
-        <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-1 rounded">Sair</button>
+        <button onClick={handleUpdatePassword} className="bg-blue-500 text-white px-2 py-1 rounded">Alterar Senha</button>
+        <button onClick={handleLogout} className="bg-red-500 text-white px-2 py-1 rounded">Sair</button>
       </div>
       
       <input
@@ -106,7 +112,7 @@ export default function TaskPage() {
       <ul className="space-y-2">
         {tasks.map((task) => (
           <li key={task._id} className={`border p-2 flex justify-between items-center rounded shadow ${getStatusColor(task.status)}`}>
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full mr-2">
               {editingTaskId === task._id ? (
                 <input
                   type="text"
@@ -139,11 +145,11 @@ export default function TaskPage() {
                 <option value="Finalizada">Finalizada</option>
               </select>
               {editingTaskId === task._id ? (
-                <button onClick={() => handleSave(task)} className="bg-green-500 text-white px-2 py-1 rounded mr-2">Salvar</button>
+                <button onClick={() => handleSave(task)} className="bg-green-500 text-white px-2 py-1 rounded border border-white mr-1">Salvar</button>
               ) : (
-                <button onClick={() => setEditingTaskId(task._id)} className="bg-blue-500 text-white px-2 py-1 rounded mr-2">Editar</button>
+                <button onClick={() => setEditingTaskId(task._id)} className="bg-blue-500 text-white px-2 py-1 rounded border border-white mr-1">Editar</button>
               )}
-              <button onClick={() => handleDelete(task._id)} className="bg-red-500 text-white px-2 py-1 rounded">Excluir</button>
+              <button onClick={() => handleDelete(task._id)} className="bg-red-500 text-white px-2 py-1 rounded border border-white mr-1">Excluir</button>
             </div>
           </li>
         ))}
