@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+@theme {
+    --color-blue-500: rgb(var(--blue));
+    --color-green-500: rgb(var(--green));
+    --color-yellow-500: rgb(var(--yellow));
+    --color-red-500: rgb(var(--red));
+  }
+
+body {
+    background-color: rgb(var(--background));
+    color: rgb(var(--text-color));
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark {
+    --blue: 100, 100, 255;
+    --green: 50, 205, 50;
+    --yellow: 252, 186, 3;
+    --red: 200, 50, 50;
+    --background: 18, 18, 18;
+    --text-color: 255, 255, 255;
+}
+
+.light{
+    --blue: 0, 0, 255;
+    --green: 9, 227, 9;
+    --yellow: 252, 186, 3;
+    --red: 255, 0, 0;
+    --background: 255, 255, 255;
+    --text-color: 0, 0, 0;
+}

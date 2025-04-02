@@ -140,9 +140,9 @@ export default function TaskPage() {
                 onChange={(e) => handleStatusChange(task._id, e.target.value)}
                 className="border rounded p-1 mr-2"
               >
-                <option value="Pendente">Pendente</option>
-                <option value="Em andamento">Em andamento</option>
-                <option value="Finalizada">Finalizada</option>
+                <option className="text-black" value="Pendente">Pendente</option>
+                <option className="text-black" value="Em andamento">Em andamento</option>
+                <option className="text-black" value="Finalizada">Finalizada</option>
               </select>
               {editingTaskId === task._id ? (
                 <button onClick={() => handleSave(task)} className="bg-green-500 text-white px-2 py-1 rounded border border-white mr-1">Salvar</button>
