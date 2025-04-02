@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getTasksByDate, update, updateStatus, deleteTask, create } from "../services/taskService";
 import { Task } from "../models/Task";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -8,6 +9,7 @@ export default function TaskPage() {
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [newTaskDescription, setNewTaskDescription] = useState<string>("");
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (date) {
@@ -22,17 +24,17 @@ export default function TaskPage() {
   const handleSave = async (task: Task) => {
     await update(task._id, { description: task.description, date: task.date });
     setEditingTaskId(null);
-    getTasksByDate(date).then(setTasks)
+    getTasksByDate(date).then(setTasks);
   };
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     await updateStatus(id, newStatus);
-    getTasksByDate(date).then(setTasks)
+    getTasksByDate(date).then(setTasks);
   };
 
   const handleDelete = async (id: string) => {
     await deleteTask(id);
-    getTasksByDate(date).then(setTasks)
+    getTasksByDate(date).then(setTasks);
   };
 
   const handleCreateTask = async () => {
@@ -41,29 +43,32 @@ export default function TaskPage() {
       date: date,
     };
 
-    const createdTask = await create(newTask); // Adicionando a nova tarefa ao banco
-    setTasks([...tasks, createdTask]); // Atualizando a lista de tarefas com a nova tarefa
-    setIsCreating(false); // Fechando o formulário de criação de tarefa
-    setNewTaskDescription(""); // Limpando o campo de descrição
+    await create(newTask);
+    setIsCreating(false);
+    setNewTaskDescription("");
+    getTasksByDate(date).then(setTasks);
+  };
+
+  const handleLogout = () => {
+    navigate("/login");
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Pendente":
-        return "bg-yellow-500";
-      case "Em andamento":
-        return "bg-blue-500";
-      case "Finalizada":
-        return "bg-green-500";
-      default:
-        return "";
+      case "Pendente": return "bg-yellow-500";
+      case "Em andamento": return "bg-blue-500";
+      case "Finalizada": return "bg-green-500";
+      default: return "";
     }
   };
 
   return (
     <div className="container mx-auto p-4 max-w-lg">
-      <h1 className="text-2xl font-bold mb-4">Gerenciador de Tarefas</h1>
-
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Gerenciador de Tarefas</h1>
+        <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-1 rounded">Sair</button>
+      </div>
+      
       <input
         type="date"
         value={date}
@@ -71,17 +76,15 @@ export default function TaskPage() {
         className="border rounded p-2 w-full mb-4"
       />
       
-      {/* Botão de Criar Tarefa */}
       {!isCreating && (
         <button
           onClick={() => setIsCreating(true)}
-          className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+          className="bg-green-500 text-white px-4 py-2 rounded mb-4 w-full"
         >
           Criar Nova Tarefa
         </button>
       )}
 
-      {/* Formulário para criar tarefa, visível quando isCreating é true */}
       {isCreating && (
         <div className="mb-4">
           <input
@@ -112,7 +115,7 @@ export default function TaskPage() {
                   className="border rounded p-1 w-full mb-1"
                 />
               ) : (
-                <span>{task.description}</span>
+                <span className="text-white font-medium">{task.description}</span>
               )}
               {editingTaskId === task._id ? (
                 <input
@@ -122,10 +125,10 @@ export default function TaskPage() {
                   className="border rounded p-1 w-full"
                 />
               ) : (
-                <span>{new Date(task.date).toISOString().split("T")[0].split("-").reverse().join("/")}</span>
+                <span className="text-white">{new Date(task.date).toISOString().split("T")[0].split("-").reverse().join("/")}</span>
               )}
             </div>
-            <div>
+            <div className="flex items-center">
               <select
                 value={task.status}
                 onChange={(e) => handleStatusChange(task._id, e.target.value)}
