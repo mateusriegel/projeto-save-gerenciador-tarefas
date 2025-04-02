@@ -83,10 +83,7 @@ export default function TaskPage() {
       />
       
       {!isCreating && (
-        <button
-          onClick={() => setIsCreating(true)}
-          className="bg-green-500 text-white px-4 py-2 rounded mb-4 w-full"
-        >
+        <button onClick={() => setIsCreating(true)} className="bg-green-500 text-white px-4 py-2 rounded mb-4 w-full">
           Criar Nova Tarefa
         </button>
       )}
@@ -100,10 +97,7 @@ export default function TaskPage() {
             placeholder="Descrição da tarefa"
             className="border rounded p-2 w-full mb-2"
           />
-          <button
-            onClick={handleCreateTask}
-            className="bg-green-500 text-white px-4 py-2 rounded w-full"
-          >
+          <button onClick={handleCreateTask} className="bg-green-500 text-white px-4 py-2 rounded w-full">
             Salvar Tarefa
           </button>
         </div>

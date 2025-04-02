@@ -46,10 +46,7 @@ const Login: React.FC = () => {
           className="w-full p-2 border rounded mb-4"
           required
         />
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded"
-        >
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
           Entrar
         </button>
       </form>

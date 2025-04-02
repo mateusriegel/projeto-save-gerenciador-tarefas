@@ -1,6 +1,6 @@
 import express from 'express';
 import { requireAuth } from '../middleware/AuthMiddleware.js';
-import { create, findAll, getById, remove, update, updateStatus } from '../controllers/TaskController.js';
+import { findAll, getById, create, update, updateStatus, remove } from '../controllers/TaskController.js';
 
 const router = express.Router();
 
