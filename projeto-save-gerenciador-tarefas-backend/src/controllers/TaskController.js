@@ -11,22 +11,6 @@ export const findAll = async (req, res) => {
   }
 };
 
-export const getById = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const task = await Task.findOne({ _id: id, user: req.user.id });
-    
-    if (!task) {
-      return res.status(404).json({ message: 'Tarefa não encontrada' });
-    }
-    
-    res.status(200).json(task);
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar tarefa', error });
-  }
-};
-
 export const create = async (req, res) => {
   try {
     const dto = new CrudTaskDTO(req.body);
