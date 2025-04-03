@@ -40,7 +40,7 @@ export const create = async (req, res) => {
     
     res.status(201).json(task);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao criar tarefa', error });
+    res.status(500).json({ message: error.errors?.description?.message || "Erro ao criar tarefa" });
   }
 };
 
@@ -61,7 +61,7 @@ export const update = async (req, res) => {
 
     res.status(200).json(updatedTask);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao atualizar tarefa', error });
+    res.status(500).json({ message: error.errors?.description?.message || "Erro ao atualizar tarefa" });
   }
 };
 
@@ -86,7 +86,7 @@ export const updateStatus = async (req, res) => {
 
     res.status(200).json(updatedTask);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao atualizar status da tarefa', error });
+    res.status(500).json({ message: error.errors?.description?.message || "Erro ao atualizar status da tarefa" });
   }
 };
 
@@ -102,7 +102,7 @@ export const remove = async (req, res) => {
   
     res.status(200).json({ message: 'Tarefa deletada com sucesso' });
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao deletar tarefa', error });
+    res.status(500).json({ message: error.errors?.description?.message || "Erro ao deletar tarefa" });
   }
 };
 

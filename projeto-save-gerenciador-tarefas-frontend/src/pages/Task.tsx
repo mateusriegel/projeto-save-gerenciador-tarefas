@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getTasksByDate, update, updateStatus, deleteTask, create } from "../services/taskService";
 import { Task } from "../models/Task";
 import { useNavigate } from "react-router-dom";
+import { APIError } from "../api/api";
 
 export default function TaskPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -9,6 +10,8 @@ export default function TaskPage() {
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [newTaskDescription, setNewTaskDescription] = useState<string>("");
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [errorCreate, setErrorCreate] = useState<string>("");
+  const [errorUpdate, setErrorUpdate] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,8 +31,15 @@ export default function TaskPage() {
   };
 
   const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
     await updateStatus(id, newStatus);
     getTasksByDate(date).then(setTasks);
+    setErrorUpdate("")
+
+    } catch (error) {
+      const err = error as APIError;
+      setErrorUpdate(err.response?.data?.message || "Erro ao atualizar tarefa");
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -43,10 +53,17 @@ export default function TaskPage() {
       date: date,
     };
 
-    await create(newTask);
-    setIsCreating(false);
-    setNewTaskDescription("");
-    getTasksByDate(date).then(setTasks);
+    try {
+      await create(newTask);
+      setIsCreating(false);
+      setNewTaskDescription("");
+      getTasksByDate(date).then(setTasks);
+      setErrorCreate("");
+
+    } catch(error) {
+        const err = error as APIError;
+        setErrorCreate(err.response?.data?.message || "Erro ao cadastrar tarefa");
+    }
   };
 
   const handleLogout = () => {
@@ -97,6 +114,7 @@ export default function TaskPage() {
             placeholder="Descrição da tarefa"
             className="border rounded p-2 w-full mb-2"
           />
+          {errorCreate && <p className="text-red-500 mb-2">{errorCreate}</p>}
           <button onClick={handleCreateTask} className="bg-green-500 text-white px-4 py-2 rounded w-full">
             Salvar Tarefa
           </button>
@@ -127,6 +145,7 @@ export default function TaskPage() {
               ) : (
                 <span className="text-white">{new Date(task.date).toISOString().split("T")[0].split("-").reverse().join("/")}</span>
               )}
+              {errorUpdate && <p className="text-red-500 mb-2">{errorUpdate}</p>}
             </div>
             <div className="flex items-center">
               <select

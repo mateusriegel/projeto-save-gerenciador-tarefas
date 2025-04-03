@@ -12,11 +12,9 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { token } = await register(email, password);
+      await register(email, password);
+      navigate("/login");
       
-      localStorage.setItem("token", token);
-
-      navigate("/task");
     } catch(error) {
       const err = error as APIError;
       setError(err.response?.data?.message || "Erro ao cadastrar usuário");
