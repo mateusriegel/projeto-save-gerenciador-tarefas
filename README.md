@@ -16,11 +16,9 @@ Frontend:
 
 Deploy
 
-Backend
 O backend está hospedado no Render, na seguinte URL: https://projeto-save-gerenciador-tarefas-backend.onrender.com
 
 
-Frontend
 O frontend está hospedado no Vercel e pode ser acessado em: https://projeto-save-gerenciador-tarefas-frontend.vercel.app/
 
 ---
